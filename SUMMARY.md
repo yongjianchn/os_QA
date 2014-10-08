@@ -1,5 +1,7 @@
 # 操作系统课程问答
 
+如果有问题，请mail: xuyongjiande@gmail.com
+
 * [01-操作系统介绍](01-intro.md)
 * [02-中断、异常和系统调用](02-interrupt-exception-syscall.md)
 * [03-物理内存管理](03-pmm.md)

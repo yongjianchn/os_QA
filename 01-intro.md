@@ -30,3 +30,20 @@
 2. ln -s /usr/bin/qemu-system-i386 /usr/bin/qemu
 用刚才查到的qemu-system-i386的绝对路径创建一个软链接
 ```
+
+5 之前没用过arm，在配置到android list avd显示
+Available Android Virtual Devices:
+Name: ucore
+Path: /home/lyk423/.android/avd/ucore.avd
+Target: Android 4.1.2 (API level 16)
+ABI: armeabi-v7a
+Skin: WVGA800
+之后执行./uCore_run出现了
+AVD not specified. Fetch the first avd from "android list avd" and get "ucore"
+emulator: ERROR: Could not load OpenGLES emulation library: libOpenglRender.so: cannot open shared object file: No such file or directory
+emulator: WARNING: Could not initialize OpenglES emulation, using software renderer.
+无法启动是什么原因呢？
+
+```
+请检查/bin/sh指向的是哪个shell，如果是dash的话会因为dash不支持某些shell语法导致编出来的image里初始地址不正确，把/bin/sh指向/bin/bash即可。
+```

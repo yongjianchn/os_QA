@@ -2,6 +2,7 @@
 
 如果有问题，请mail: xuyongjiande@gmail.com
 
+* [工具使用](00-tool-manual.md)
 * [操作系统介绍](01-intro.md)
 * [中断、异常和系统调用](02-interrupt-exception-syscall.md)
 * [物理内存管理](03-pmm.md)

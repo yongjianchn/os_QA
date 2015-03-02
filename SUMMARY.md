@@ -13,4 +13,5 @@
 * [死锁和进程间通信](09-deadlock-ipc.md)
 * [文件系统](10-filesystem.md)
 * [I/O子系统](11-io.md)
+* [其他](others.md)
 * [QQ群精彩答疑](QQTalk.md)

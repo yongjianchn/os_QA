@@ -1,9 +1,9 @@
 ##基础知识
 
-除了存储进程的trapframe，内核堆栈还有什么用呢？ 
+Q1: 除了存储进程的trapframe，内核堆栈还有什么用呢？ 
 我看进程拷贝的时候只拷贝了trapframe，并没有拷贝整个内核堆栈
 
-答：
+A1:
 堆栈是两个东西，heap 和 stack. 
 Stack是用来维护execution flow. stack存储了一些临时数据，包括 local data and return address. 
 Kernel stack 就是在kernel mode 下的 stack, 也一样包括了 local data and return 
@@ -17,14 +17,14 @@ address(包括切换回user mode的). Kernel stack也是用来维护execution fl
 可以从下一个进程是否会重用kernel stack来理解fork时拷贝。只要下一个进程不会占用的，就可以不复制。这样，就只有寄存器是必须复制的了，其他的都可以不复制。
 
 
-看到考试上的一些题目问到某个页式管理机制最多一共有多少个页表。 
+Q2: 看到考试上的一些题目问到某个页式管理机制最多一共有多少个页表。 
 那如果考虑自映射机制的话，一级页表的其中一个表项指向的是一级页表本身，是否应该在统计的时候减1？
-答：
+A2:
 你的理解是正确的。自映射的页表占了两个位置。 
 
 
-线性地址、物理地址、虚拟地址具体的联系和区别是什么？
-答：
+Q3: 线性地址、物理地址、虚拟地址具体的联系和区别是什么？
+A3:
 这个，看IA32手册吧。
 简单来说
 Virtual Address ------ Segment ------>

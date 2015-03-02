@@ -1,7 +1,11 @@
 ##基础知识
-##Ucore实验相关
 
-特别是各种garbage collection的内存管理优化技术等有很好的介绍
-http://www.google.com/url?sa=D&q=http://www.cs.kent.ac.uk/people/staff/rej/gc.html&usg=AFQjCNEo4g_Ss36ewwwrChke-GDjKpHQGA
-感兴趣的同学可以瞧瞧。
-感谢提供此信息的Yang Xi (the Ph.D. student of Prof. Steve Blackburn) ! 
+Q1:
+段寄存器的内容是否就是段选择子？
+段选择子中的RPL部分除了在CS的情况下有判断请求特权级的作用之外，对DS、SS等其他段寄存器而言是否有意义？ 
+
+A1:
+下面链接很好地解释了DPL、RPL和CPL的含义和关系。
+http://hi.baidu.com/ozwarld/item/fa6120471e4d91e7bdf45182
+
+##Ucore实验相关

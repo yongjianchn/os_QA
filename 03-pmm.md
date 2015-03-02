@@ -37,3 +37,20 @@ Physical Address
 
 ##Ucore实验相关
 
+Q4:
+lab2的ucore的小os的load addr和link addr分别是多少？ 
+我从kernel.ld得到load addr是0xC0100000，但不知道link addr从哪里得到，需要虚拟地址还是物理地址？希望老师给出答案。 
+
+A4:
+ucore 设定了ucore运行中的虚地址空间，具体设置可看 memlayout.h "Virtual memory map: "图 
+所以 tools/kernel.ld描述的是 link_addr , link addr是0xC0100000 是一个虚地址，在ucore建立内核用页表时，设定的虚实映射关系是： 
+phy addr + 0xC0000000 = virtual addr 
+但bootloader把OS load到内存，那时还没有启动页表映射，用的是bootloader阶段设置的段模式，其映射关系(bootasm.S最后有段描述符表)是： 
+linear addr = phy addr = virtual addr 
+所以查看 bootloader的实现代码 bootmain::bootmain.c 
+readseg(ph->p_va & 0xFFFFFF, ph->p_memsz, ph->p_offset); 
+p_va=0xC0XXXXXX 
+但 ph->p_va & 0xFFFFFF= 0x0XXXXXX 
+了所以bootloader load OS的load addr是0x0XXXXXX, 是物理地址，这个是通过分析bootmain函数的实现得到的。 
+简言之： OS的link addr 在tools/kernel.ld中设置好了，是一个虚地址 
+OS的load addr在bootmain函数中指定了，是一个物理地址 

@@ -48,8 +48,15 @@ emulator: WARNING: Could not initialize OpenglES emulation, using software rende
 请检查/bin/sh指向的是哪个shell，如果是dash的话会因为dash不支持某些shell语法导致编出来的image里初始地址不正确，把/bin/sh指向/bin/bash即可。
 ```
 
-6 特别是各种garbage collection的内存管理优化技术等有很好的介绍
-http://www.google.com/url?sa=D&q=http://www.cs.kent.ac.uk/people/staff/rej/gc.html&usg=AFQjCNEo4g_Ss36ewwwrChke-GDjKpHQGA
-感兴趣的同学可以瞧瞧。
-感谢提供此信息的Yang Xi (the Ph.D. student of Prof. Steve Blackburn) ! 
+6 下断点但是程序根本停不下来
+
+```
+我这里是自己原来的Ubuntu 12.04 32bit, 使用 apt-get 直接安装的 qemu，版本为 QEMU emulator version 1.0 (qemu-kvm-1.0)，遇到的问题是下0x7c00的断点但是并不能停止而是直接继续启动完了。
+ 
+后来查到相关问题，偶然尝试而解决，方法是在启动 qemu 时加入参数 -no-kvm，可以加到 Makefile 里方便使用。
+ 
+在正常运行的同学那里看到，在用 qemu -monitor stdio 启用 qemu 自己的命令行中使用 info kvm 可以看到默认为禁用的，但是我这里默认为启用。
+ 
+默认设置为什么不一样，原因不明…… kvm 支持为什么会造成断点失效，原因不明……解决方法仅供参考～
+```
 

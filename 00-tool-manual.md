@@ -1,5 +1,7 @@
 # 操作系统课需要的各种软件的使用方便
 
+参考文献：[Building and Running an edX Course](http://edx-partner-course-staff.readthedocs.org/en/latest/creating_content/index.html)
+
 ## 学堂在线平台的课程维护
 
 ### 上传字幕

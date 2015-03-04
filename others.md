@@ -351,3 +351,439 @@ XV6下的FAT32支持进展：http://www.google.com/url?sa=D&q=http://os.cs.tsing
 随后写者们完成了最后一个写操作，可以进行读操作了。于是所有等待在信号量rsem上的读者开始逐一获得信号量rsem，然后申请信号量x，检查自己是否是第一个读者，确认不是第一个后开始读操作。如果这时的读者的数目很多，这个过程需要一定的时间。
 设想这时又有一个写者到达，它就没有办法赶在正在逐一申请信号量x的读者前面进行写操作了。
 如果这时有信号量z的作用，这个写者就可以在第一时间挡住正在获得信号量rsem的读者，最大限度地实现写者优先。
+
+cueroqu: 操作系统课程的实验部分有时候需要汇编语言的知识。然后有些语法一时很难查到具体什么意思。不知到有没专门此类介绍汇编语言语法的网站呢？或者说还是先略过这些实验然后先对操¬作系统有一个大致的了解（比如看后续的课件）？ 
+答： 
+chyyuu: 
+OS实验用的是GNU AS 汇编器和GNU CC内联汇编技术，相关文档如下： 
+X86的指令集详细文档，可查到所有的X86汇编：ia32-instrset.pdf 
+http://www.google.com/url?sa=D&q=http://www.bytelabs.org/pub/ct/arch/intel/ia32-instrset.pdf&usg=AFQjCNEf14eSMFxGAQT_V2hwsKuzf11sig
+是所有的机器指令说明文档。此目录下的另外两个文档对理解x86硬件工作模式和硬件系统系编程很有帮助。 
+中文介绍文档：Linux 中 x86 的内联汇编 
+http://www.google.com/url?sa=D&q=http://www.ibm.com/developerworks/cn/linux/sdk/assemble/inline/index.html&usg=AFQjCNGsJhhoKP0uHuZL7ZlJRyefhQwRtw
+英文GNU汇编专业电子书，掌握此书，将是汇编绝对高手
+《Professional Assembly Language》英文版 ，作者 Richard Blum 
+http://www.google.com/url?sa=D&q=http://forum.eviloctal.com/thread-31189-1-4.html&usg=AFQjCNGCnNrpdZtqNFxDEyEFjgmyHFv8mA
+另外可以通过 google等搜索 "GNU" "Assembly" 或 “GNU” “汇编”等查找相关信息 
+【扩展实验：用户态与系统态】
+陈老师， 
+今天根据课上讲的我试做了扩展实验1，现在碰到一个问题一晚上无法解决，还请帮忙指教： 
+我的程序先从系统态跳到了用户态，然后在用户态下执行了int 0x80，结果出现错误： 
+qemu: fatal: invalid tss type 
+qemu直接关闭。 
+然后我试着查阅tss相关资料，了解到tss是task上下文切换用的，在用户态到系统态发生特权等级变化时要用到。而我们的proj4默认没有设置tss的操¬作，我便试着在gdt中加入tss项：
+SEG_ASM(0x89, 0x00000, 0x20ab) 
+然后ltr进去0x28 
+这样操作后，遇到第一个call或者jmp指令就会导致qemu重启。然后试了很久毫无进展，还望老师指导一下。 
+具体错误log: 
+(qemu) qemu: fatal: invalid tss type 
+EAX=00100028 EBX=00010094 ECX=00000528 EDX=00000010 
+ESI=00010094 EDI=00000000 EBP=0013fffc ESP=0013ffd4 
+EIP=0010000a EFL=00003202 [-------] CPL=3 II=0 A20=1 SMM=0 HLT=0 
+ES =0000 00000000 00000000 00000000 
+CS =001b 00000000 ffffffff 00cffa00 DPL=3 CS32 [-R-] 
+SS =0023 00000000 ffffffff 00cff200 DPL=3 DS [-W-] 
+DS =0000 00000000 00000000 00000000 
+FS =0000 00000000 00000000 00000000 
+GS =0000 00000000 00000000 00000000 
+LDT=0000 00000000 0000ffff 00008200 DPL=0 LDT 
+TR =0000 00000000 0000ffff 00008b00 DPL=0 TSS32-busy 
+GDT= 00007c54 0000002f 
+IDT= 0010f040 000007ff 
+CR0=00000011 CR2=00000000 CR3=00000000 CR4=00000000 
+DR0=00000000 DR1=00000000 DR2=00000000 DR3=00000000 
+DR6=ffff0ff0 DR7=00000400 
+CCS=00000028 CCD=0013ffd4 CCO=SUBL 
+EFER=0000000000000000 
+FCW=037f FSW=0000 [ST=0] FTW=00 MXCSR=00001f80 
+FPR0=0000000000000000 0000 FPR1=0000000000000000 0000 
+FPR2=0000000000000000 0000 FPR3=0000000000000000 0000 
+FPR4=0000000000000000 0000 FPR5=0000000000000000 0000 
+FPR6=0000000000000000 0000 FPR7=0000000000000000 0000 
+XMM00=00000000000000000000000000000000 
+XMM01=00000000000000000000000000000000 
+XMM02=00000000000000000000000000000000 
+XMM03=00000000000000000000000000000000 
+XMM04=00000000000000000000000000000000 
+XMM05=00000000000000000000000000000000 
+XMM06=00000000000000000000000000000000 
+XMM07=00000000000000000000000000000000 
+Aborted 
+----Shengwei Ren 
+答：
+challenge 代码给的可能不是很全。 
+tss 应该在 gdt 里面，实际上 boot 到 kernel 以后还会再设置一次 gdt。里面会设置 tss。不过 proj4 还没有给这段程序。 然后 tss 里面得设置 stack 位置（查看 intel 手册 / google 了解一下这个 stack 的作用） 
+SEG_ASM(0x89, 0x00000, 0x20ab) 这个似乎不对。而且这个不是 challenge 的重点。不过你可以先自己尝试一下设计一个。 
+我问问陈老师，看看是不是稍后给出缺的那段程序。 
+【内存管理算法】
+向老师：
+> 您好！
+> 我们是做内存管理小组的。
+> 目前我们把proj7.1的swap相关文件嵌入了ucore-mp64文件，同时仿造已有算法的框架完成了另外三个算法的实现。 
+> 但是现在我们对于tick_event操作的调用地方没有概念，在咨询助教后放在了trap里的时钟中断调用里，但是这样会产生一个进程，在qemu运行最后无¬法消除。 
+> 另外，因为已有的working_set和自己实现的lru/page_fault_frequency算法需要tick_event操作，不断地更新每个节点¬对应的调用时间，所以无法进行测试。所以我们想问一下向老师有什么建议？ 
+> 计81 元升高
+> 2011-12-17
+答：
+tick_event是应该由时钟中断触发，可以借见的做法是Windows中的延迟过程调用。大致的的意思是，中断中触发或设置一个tick_event任务¬，在延迟过程调用中执行，它的执行是优先于所有进程执行的。目前ucore还没有对它的支持。一种可能做法是，把tick_event直接放在中断服务例程中执¬行。 
+关于你说的“这样会产生一个进程，在qemu运行最后无法消除”，没有太明白。系统中会有一直存在的进程，如IDLE进程就是一直存在的。 
+关于测试的事，可以通过输出日志，并在事后进行统计来完成。如果日志太多，可以在内核中维护一些调试数据结构，只输出统计结果。当可以跟踪算法状态后，还需要写¬一些进行特定操作的应用程序，从而测试算法的特征。 
+如果仍有问题，请与我约时间当面交流。
+【kernel启动问题】
+> 向老师， 
+> 您好，我今天开始尝试扩展实验，目前做到把GRUB安装在U盘上。我自己查了一 
+> 些相关资料，但是使用kernel启动不行，而使用ucore.img直接启动，以及添加 
+> multiboot header到ucore.img，都停在[Linux-zImage, setup=0x800, 
+> size=0xbe00]（这个img是否不是zImage？）。不知道主要还需要对其做什么修 
+> 改，有什么资料可以参考，还请您告诉我，谢谢！
+答：
+ucore应该是只能直接启动，它已包含了GRUB的部分功能。在上学期也有同学做过尝试，相关结果参见下面链接。
+http://www.google.com/url?sa=D&q=http://os.cs.tsinghua.edu.cn/oscourse/OsTrain2009/FlashDisk&usg=AFQjCNHOz8aVMNbSiEpVKOW5jHpXgYhx7g
+这些尝试对应的代码可从下面链接找到。
+git://cherry.cs.tsinghua.edu.cn/xv6-usb-2010
+希望你的尝试能有新进展。
+--向勇
+【进程同步算法】
+> 老师你好，我操统实验二选择了进程同步，这个在操统课lab5里是有相应的实现 
+> 的，
+> 但是wiki上的版本里边没有信号量的相应实现。
+> 向老师求救。
+> 谢谢！
+
+答：
+是的。在目前的版本中有的进程同步机制是管道（pipe.c）和消息(sysmsg.c)，没有信号量。你可以对这两种机制进行测试。
+另外，自旋锁（spinlock.c）也与同步机制密切相关，但我没有想明白如何能用用 
+户态测试对它进行一些测试。你也可以考虑是否有可能对它进行测试。
+--向勇
+
+fork后父子进程的先后执行顺序是不确定的。 
+vfork后父进程会等子进程结束或调用exec()。 
+详细描述参见： 
+http://www.google.com/url?sa=D&q=http://en.wikipedia.org/wiki/Fork_%2528operating_system%2529&usg=AFQjCNGPk2EeS_rM888sdYOXTiO081-DBg
+--向勇 
+【USB bootloader资料】
+今天我又在网上找了一些关于USB bootloader的信息，见下面的列表。
+http://www.google.com/url?sa=D&q=http://os.cs.tsinghua.edu.cn/oscourse/OsTrain2009/FlashDisk%23head-d2da5a334828683b20f00739aa4b73cf00895240&usg=AFQjCNHjYCaoefCuU1w0C6E_xMj00VN5rw
+--向勇
+【显卡驱动的已有工作】
+> 向老师： 
+> 您好，我报名了课程设计中的U14，不知道上次答疑时提到的之前实现的可以显示jpeg的简单实现在哪里？在2011年的project里面找不到。 
+> 另外本次lab1作业中，challenge部分对于报名课程设计的是不是必做呢？另外challenge部分提到说在1周内在另外开的窗口提交，但是现在网络¬学堂还没有看到，不清楚是不是今天交。另外challenge部分实验内容不太清楚，完成switch to user和switch to kernel就可以通过make grade了，不知道提到的使用sys_call获取当前时钟ticks是否需要做，有没有规范如何写的要求。
+
+答：
+显卡驱动的工作是2010年，可参见下面链接。
+http://www.google.com/url?sa=D&q=http://os.cs.tsinghua.edu.cn/oscourse/OsTrain2010/DriverReuse&usg=AFQjCNGaj82Z1B1QwZ6L9tiu5iCZVAgR_w
+关于实验中的选做部分，对于报名课程设计的同学是必做的，与基本要求一起在网络学堂中提交。如果你还没有提交，可以发给我。这一部分目前没有特别的报告撰写要求¬。 
+--向勇
+【syscall功能扩展】
+想做第一个Challenge B，即扩展proj4,增加syscall 功能，即增加一用户态函数（可执行一特定系统调用：获得时钟计数值），当内核初始完毕后，可从内核态返回到用户态的函数，而用户态的函数又通过系统调用得到内核¬态的服务。
+想问下这里如何可以返回到用户态？一般来说是否需要内存管理和进程管理，但这些在lab1中都还没有。 
+------------------------------------- 
+主要是如何完成 x86的ring0<->ring3之间的正确切换，需要了解x86相关细节，也可看xv6了解。不需要内存管理和进程管理。
+
+答：
+如果选作，我觉得，大体可以按照下面要求完成： 
+1. lab1 里面整个都是 kernel 态的。kern/init/init.c 最后是 while(1) 循环；在此之前请插入一段函数，完成从kernel mode -> user mode -> kernel mode 的函数，可以通过 int 指令实现（syscall）。 感兴趣的同学也可以通过 callgate 实现（这个实现非常复杂，也不容易理解，但是查阅相关资料对了解 x86 特权级保护有很大帮助。） 
+2. 比如插入 switch_mode 函数完成切换，能够依次调用 switch2kern, switch2user, switch2kern 完成状态切换。每次完成切换以后，能够通过在 switch_mode 函数里面，打印出当前状态的 cs/ss/ds/es (fs,gs) 寄存器状态表示当前的身份状态。 
+3. HINTS：硬件在中断发生时，特权级变化和不变化时压栈和弹桟的行为是不是一样？特别是 iret 指令。（参见 intel 手册） 
+谨慎函数桟的维护 
+【Android内核编译】
+请问有没有同学编译过android内核，遇到一些问题想请教一下。 
+谢谢！
+
+答：
+U10小组的同学应该编译过 android for x86。可咨询这两位同学。 ("张超" <Eric....@gmail.com>, "EndlessRoad1991" <endlessroad1...@gmail.com>,) 
+我的一个研究生刘金钊编译过 android for ARM （HTC G7），也可咨询一下。 "inno mentats"
+【ucore代码问题】
+【add_timer函数】
+问题：kern/schedule/Sched.c中的add_timer函数，了解大概意思就是在time_list这个静态的表中去找，找到具体位置之后插¬入到链表中去，但下面这段代码就不懂了： 
+while (le != &timer_list) { 
+timer_t *next = le2timer(le, timer_link); 
+if (timer->expires < next->expires) { 
+next->expires -= timer->expires; 
+break; 
+} 
+timer->expires -= next->expires; 
+le = list_next(le); 
+} 
+尤其是这句： next->expires -= timer->expires 为什么改变next的睡眠时间呢？ 
+
+ 	答：
+timer 是一个链表。里面每一个元素的实际 sleep 的时间实际上是从链表头到该元素所有经过的 timer_t 的 expires 的和。 
+这样的好处是，每次产生时钟中断的时候，只需要检查链表头确定是否有 timer 到期了。而不是遍历整个链表。 
+add_timer 把 le 插入到链表里面了。那么必然需要更新它插入的位置后面元素的 timer_t 的 expires 的值。 
+
+陈渝老师，您好： 
+最近在做作业的过程中有一些未能理解的地方，不知是我理解不当还是 manual的瑕疵，望老师不吝指正： 
+1.1.6 
+1. grade.sh中检验输出时用了"grep -F"（line 218），但根据grep的说明，-F之 后的PATTERN "is a set of newline-separated fixed strings"，而PATTERN实际用的是regexp，似乎没办法用来校验结果......
+1.1.7.5：
+1. "中断向量表"指的是实模式下使用的中断向量表还是中断描述符表？
+"实验＆报告要求"中：
+1. proj3_your_proj和proj6_1_your_proj不存在；若指proj3.1和proj4，应交原 目录还是make 
+handin得到的打包文件？
+2. tar不接受jzf（"Conflicting compression options"），选项是否应该是cjf？
+盼复，并祝好。 
+您的学生 
+茅俊杰 
+答：
+grade.sh 里 grep 有 2 种方法，-E 和 -F.
+lab1 的测试用的是 -E。
+
+1.1.7.5: 
+1. 那个指的是idt表，可以结合第二问理解 
+实验报告要求：
+1. 指的是proj3.1和proj4。请在目录中执行make handin之后，将生成的压缩包复制到lab1_result中，并且与报告一起打包上传。
+2. 正确选项为cjf，也可以用jcf，jcvf...... 
+【panic错误】
+运行答案时，有非常小的几率出现panic错误，也就是结果不稳定。 
+发现get_proc_RR函数中，num_procs_moved = (rq->proc_num)/2;这条语句在最前面。之后有一个测试输出的 
+部分： 
+#ifdef LOAD_BALANCE_OUTPUT 
+if(num_procs_moved != 0) 
+{ 
+cprintf("before load_balance\n"); 
+release(&(rq->rq_lock)); 
+procdump(); 
+acquire(&(rq->rq_lock)); 
+} 
+#endif 
+这中间释放了锁，那就有可能在这里出现问题，比如num_procs_moved＝2，在释放锁的瞬间rq减少了3个进程，则会出现在后面转移的时候出错。不知道理解的对不对？
+
+答：
+恩，我感觉也是这里的问题。
+在LOAD_BALANCE_OUTPUT的前后num_procs_moved可能不同，所以下面遍历数组时再用到num_procs_moved就有可能出现错误。 
+LOAD_BALANCE_OUTPUT后面也就是#endif后面再加一句num_procs_moved = (rq->proc_num)/2;就没有错误了，但就是前面output的东西没有意义了。。。干脆LOAD_BALANCE_OUTPUT部分不要算了。。。 8核时候出现的错误也来源于这里，只要去掉LOAD_BALANCE_OUTPUT后八核也能正常运行了。
+【HOME_DIR问题】
+I have the problem during setting bochsrc.
+What does this instruction mean? (cp 2008-spring/tools/bochsrc$HOME_DIR/.bochsrc) in this command line, what is $HOME_DIR? (means address in detail).
+thanks.
+
+答：
+$HOME_DIR is an environment variable, for example: /home/username/
+
+$HOME_DIR is an environment variable, which indicates the location of your "home". 
+It should be '/root' if you're using 'root', or '/home/os' if you're using 'os' user. 
+And the "home" of Linux is like "My Documents" on Windows system. :)
+【kernel.asm问题】
+Here is a piece of code in kernel.asm:
+f0100adf <vprintfmt>:
+f0100adf: 55 push %ebp
+f0100ae0: 89 e5 mov %esp,%ebp
+f0100ae2: 57 push %edi
+f0100ae3: 56 push %esi
+f0100ae4: 53 push %ebx
+f0100ae5: 83 ec 3c sub $0x3c,%esp
+f0100ae8: 8b 7d 08 mov 0x8(%ebp),%edi
+f0100aeb: 8b 5d 10 mov 0x10(%ebp),%ebx
+f0100aee: eb 03 jmp f0100af3 <vprintfmt+0x14>
+f0100af0: 8b 5d e8 mov 0xffffffe8(%ebp),%ebx
+f0100af3: 0f b6 03 movzbl (%ebx),%eax 
+f0100af6: 43 inc %ebx
+f0100af7: 3c 25 cmp $0x25,%al
+gdb thought f0100af0 is the start of the function, while many calls of <vprintfmt> does not touch this address because of the jmp instruction above it.
+When I step into this function(command s in gdb), gdb will tell bochs to set breakpoint on
+f0100af0. The problem is it never stops...
+Is it a bug of gdb? Or some problems on my gcc?
+How to solve it? Thx 
+
+答：
+None of us (40ers) used gdb when we were doing this lab. Maybe you should come to 50ers, or we can explore it together.
+this lab needs to trace every line of functions in .c 
+how do you trace it without gdb? 
+it seems that bochs only supplies asm-level debug...
+
+Maybe they just read the source code and figured it all out directly. 
+Besides value fmt and ap, it seems that other values such as *fmt, *ap and c can be calculated from the source code.
+【addr格式】
+All materials tell the command to be:
+(qemu) b addr 
+But what's the format of 'addr'? How to indicate the 0xf section?
+
+答：
+addr format is 0x127f OR 1234
+Hex format or decimal format is ok
+what is oxf section?
+
+a）首先在分段情况下，应该如何计算地址，一般来说，应该是 [$段寄存器 << 4 + $偏移量] 来得到目的地址。也就是说 lab1 里面提到的地址 0xF:0xFFF0 对应的应该是 0xF0 + 0xFFF0。不过，这个地址不是 bios 的地址，实际上文档写错了，应该是0xF000:0xFFF0，那么对应的线地址就应该是0xF0000 + 0xFFF0 = 0xFFFF0所以可以使用如下命令来添加这个断点：
+b 0xFFFF0不过需要说明的是，这样设置断点也是不正确的。正确的设置应该是：
+b 0xFFFFFFF0
+另外，bios 是开机以后第一个运行的程序，所以，应该不可能快到直接给 bios 入口加断点。不过，如果 qemu 使用 -S 参数开启的话，就可以让 qemu 开机后停止，此时已经是 bios 的入口了，可以使用 r 命令查看当前的寄存器，s 命令进行单步进入 bios，不需要再额外的插入断点。
+b) 很遗憾，qemu 目前还不能够通过 0xF000:0xFFF0 来直接设置断点，所以必须先把这个断点算出来，然后用breakpoint_insert 来手动的插入。 
+【调度器报错】
+When I ran the test file for scheduler, it printed that: 
+[ 80.296404] BUG: unable to handle kernel NULL pointer dereference at 
+00000000 
+[ 80.296409] IP: [<c02f24ce>] rb_erase+0x112/0x250 
+[ 80.296417] *pde = 00000000 
+[ 80.296422] Oops: 0000 [#1] 
+[ 80.296425] Modules linked in: kvm_amd kvm 
+[ 80.296428] 
+[ 80.296432] Pid: 3068, comm: test Not tainted (2.6.27.5 #124) 
+[ 80.296436] EIP: 0060:[<c02f24ce>] EFLAGS: 00010046 CPU: 0 
+[ 80.296440] EIP is at rb_erase+0x112/0x250 
+...... 
+how to find the location where it crash? 
+答：
+you can use objdump to disassemble the vmlinux, then you can search the rb_erase src code and assemble code, and will find some error in the rb_erase function.
+【linux启动】
+how to make linux boot info in serial：
+qemu/kvm parameters: 
+Change 
+qemu -hda userver.img 
+TO 
+qemu -hda userver.img -serial stdio 
+OR 
+Change 
+kvm -hda userver.img 
+TO 
+kvm -hda userver.img -serial stdio 
+Change grub's menu.lst 
+kernel ... 
+TO 
+kernel .... console=ttyS0,9600 console=tty0 
+then, then you can see boot messages in host console. 
+【oprofile问题】
+while using oprofile, I met some troubles:
+1. if i install oprofile with apt-get, opreport would report "opreport error: basic_string::erase" whatever i've done, e.g: 
+>opcontrol --init
+>opcontrol --start --no-vmlinux
+>opreport
+...
+2.after that i tried to compile & install oprofile from source code 0.9.4, while compiling, i met
+"error: call to '__open_missing_mode' declared with attribute error: open with O_CREAT in second argument needs 3 arguments", and I found a patch from http://www.google.com/url?sa=D&q=http://www.nabble.com/arguments-of-open()-td14924588.html&usg=AFQjCNGYfzlZsU74mdysoGhPzqdCZ4fISA, and patched /usr/include/bits/fcntl2.h, then completely passed make and make install. But then when i tried:
+>opcontrol
+but it told me no opcontrol found at /usr/bin/opcontrol...
+Thx~
+答：
+oprofile usage: 
+1 you should build a oprofile enabled kernel. 
+make menuconfig 
+General setup 
+--> OProfile system profiling (EXPERIMENTAL) 
+should be choose. 
+then, the .config file should have line 
+CONFIG_OPROFILE =y 
+or 
+CONFIG_OPROFILE=m 
+2 now get the oprofile package 
+apt-get install oprofile 
+or you can get a gui package 
+apt-get installoprofile-gui 
+3 use oprofile to measure a benchmark 
+you can write a shell to do the work 
+------- 
+#!/bin/sh 
+echo "profile the kernel:" 
+opcontrol --vmlinux=/boot/vmlinux 
+opcontrol --setup --event=CPU_CLK_UNHALTED:90000::1:1 
+opcontrol --start-daemon 
+opcontrol --reset 
+opcontrol --start 
+./BENCHMARK pipe 1 thread 5000 64 16 
+opcontrol --stop 
+opcontrol --dump 
+opreport --symbols > log.out 
+opcontrol --shutdown 
+【网卡的中断处理】
+我在做代码注释和分析的实验。
+用的ucore版本是20110913-xinhaoyuan-ucore-mp64-8000c4c.zip 
+我选择的题目是各类设备的中断处理过程。
+我在trap.c和trap.h中都没有找到网卡的中断处理函数，请问是本来就没有，还是我应该到其他文件中找？
+是否有同学老师遇到过相关的问题？谢谢！
+答：
+貌似这个版本就不支持网络吧 
+我在最新的版本里大概的找了一下，没有找到和网络有关的东西。
+网络支持也是上学期的扩展，还没有合并到我们分析的代码中。相关代码请参见下面链接。 
+http://www.google.com/url?sa=D&q=http://code.google.com/p/u5proj/source/checkout&usg=AFQjCNGsfUFVerdW7Yjg6BPROTdg6Yjbpg
+--向勇 
+【串口中断】
+>> 老师好，关于串口的中断处理函数的分析我也遇到了一个类似的问题。就是case语句中没有执行任何操作： 
+>> case IRQ_OFFSET + IRQ_COM1: 
+>> case IRQ_OFFSET + IRQ_KBD: 
+>> …… 
+>> 请问这是为什么，我在写代码注释和文档分析的时候应该怎么说明这个问题？谢谢。 
+答：
+按下面的函数调用顺序，中断信号会触发串口的处理操作。 
+kcons_getc() 
+cons_getc() 
+serial_intr() 
+cons_intr() 
+serial_proc_data()
+【管道容量】
+> 向老师，袁助教：
+> 您好，代码分析部分实验的插图我按照那个链接提示把图片放到附件里并链接到相应的位置去了，具体链接如下：
+http://www.google.com/url?sa=D&q=http://os.cs.tsinghua.edu.cn/oscourse/OsTrain2011/ca/6_1%EF%BC%8C&usg=AFQjCNG3y4Pu9LpJKJkMiK-OsU5N5HEdrQ
+但是我不小心将图片也作为附件添加到如下位置去了：
+http://www.google.com/url?sa=D&q=http://os.cs.tsinghua.edu.cn/oscourse/OsTrain2011/test/fs%3Faction%3DAttachFile%EF%BC%8C&usg=AFQjCNFdo9i1F1gXrr3qq8UN7IPjra6LVA我好像不能删除。 
+> 另外，代码测试部分实验我觉得usr-core里面的关于文件系统（fs）的测试部分已经很全面了，我选择管道这样一个很小的方面进行测试（当然usr-cor¬e里面已经存在与管道相关的测试文件）。根据我自己测的结果，在一个进程里面，当使用管道传递超过4000字节的内容qemu会崩溃（多进程不会出现这种情况）¬，相关链接如下：
+http://www.google.com/url?sa=D&q=http://os.cs.tsinghua.edu.cn/oscourse/OsTrain2011/test/fs%EF%BC%8C&usg=AFQjCNEa5pjW7zZEFF38o9zv8HkHW6W5Kg我不知道这样理解是不是正确的。如果这样理解是正确的话，我是不是可以尝试下修改VFS或SFS里的内容使之在单进程中不能使用管道或者使用管道有限制？ 
+> 此致，
+> 敬礼！
+
+答：
+我已删除你错放在“/test/fs”中的图片，并更正了在“/ca/6_1”中的图片显示格式。现可在页面中正常看到你的图片了。 
+关于管道的容量问题，任何管道都是会有容量的限制，不管是一个进程内还是在两个进程用管道。你测试到的情况表明，ucore中的管道实现是不完善的。你可以对比¬一下Linux和ucore中你的例子时的区别。如果可能，把你比较的结果和原因分析告诉我。 
+--向勇
+【管道容量】
+> 向老师： 
+> 您好，今天我做了一些小的测试，分别在ubuntu和ucore的qemu中测试了管道的容量，我的感觉是，好像在多个进程之间管道的容量好像并不受限制，我测¬试了1000000字节，完全没问题，可能我测的数量还不够多。另外，在单进程之间有一些差异，ubuntu在65536字节时还能正常保证管道正常运行，但在¬65537字节时就不行了；而ucore的这一数据是4000/4001。我没有查到真正的理论数值，只是觉得ucore可能也想取2的整数倍（4096），不¬过由于自身结构占去了一部分字节。而在ubuntu中对这一问题做了相应的修改，在定义时附加了这一部分控件，使之能成为2^16，不过这也只是我自己的想法。¬不过相同的一点是，在同一进程时，ubuntu和ucore中在管道容量越界之后都会死掉不执行。 
+> 在这两部分中我使用了相同构架的代码，具体的结果我通过截图的形式保存来了起来，分别保存为"Linux_ubuntu.PNG"、"Linux_ucore.¬PNG"，其中在ubuntu中我在越界时使用"Ctrl+C"退出，在ucore中我直接在终端中使用命令"q"退出，所以在qumu中会有"_"，我将两张¬截图都放在了附件中。 
+> 此致，
+> 敬礼！
+
+答：
+现在你可以查一下ucore和Linux的实现代码，就能解释你现在看到的现象。对这个现象的探究能让你真正理解管道的容量的含义。下面是一些提示。 
+1）ucore-mp中文件“pipe_state.c”中定义的“PIPE_BUFSIZE”就是管道容量的上限，只要在管道读写的过程中已写入但没有读出的¬数据不超过这个上限，读写操作就能正常返回。你可以通过交替读写的例子来测试在这个边界处的现象。 
+2）Linux中与pipe容量相关的代码如下：
+http://www.google.com/url?sa=D&q=http://lxr.linux.no/linux%2Bv3.1/include/linux/pipe_fs_i.h%23L21&usg=AFQjCNHw4bzBK8qtQw0vq0ttjuu_QDjeyw
+相关数据结构：
+struct pipe_buffer
+struct pipe_inode_info
+unsigned int pipe_max_size = 1048576;
+相关内核函数：
+pipe_write
+pipe_set_size
+pipe_fcntl
+相关手册：
+http://www.google.com/url?sa=D&q=http://linux.die.net/man/7/pipe&usg=AFQjCNGonXa74EstcEbYyNenCnHoCSpM9A
+pipe(7) - Linux man page
+http://www.google.com/url?sa=D&q=http://linux.die.net/man/2/fcntl&usg=AFQjCNHGvKHUDLDdU3Wmo-1S0-Jg1n5_Lw
+Changing the capacity of a pipe
+--向勇
+【磁盘管理】
+1.free_pages_bulk的时候要检查相邻的块是不是可以合并，按理说应该前后相邻都要检查，而函数中使用语句buddy_idx = page_idx ^ size，只检查了一个方向啊？这有什么说法吗。 
+2.free_pages_bulk的while循环中是不是应该在末尾增加语句size=size<<1，让块合并继续下去呢 
+3.UVPT和VPT是什么
+
+答：
+每个buddy都是预先分好的，譬如在order=3这一层，1101000就和1100000一组。(注意，低三位为0) 
+orz..我也觉得是这样 
+Virtual Page Table。 页表的物理地址？
+
+First，设计不是完美的，可以改进，如果你能够用例子说明你的改进是有效的，just do it! 
+1 没有说法，可能是例子考虑不周 
+2 可以的。 
+3 UVPT是给用户态用的，完成基本要求可以不考虑UVPT. 
+【调度算法】
+> 老师好， 
+> 我是祥明，计72的。我在弄调度算法，想分析各算法的吞吐率，等待反应时间 
+> 等。。不过xv6好像不能直接用c库中的time.h，是不是想访问系统时间要像 
+> printf那样从新编写一个单独函数？另外，测试性能时能否不用时间而用中断次 
+> 数来判断？
+答：
+xv6中目前没有获取系统时间的系统调用，你需要写一个相关的系统调用来获取当前时间。系统中有多种不同精度的时间，利用时钟中断的计时就是一种。
+--向勇
+【磁盘中断】
+> 向老师你好，我是李曦泽（2008011418），我在做第一次实验（代码注释）的过程遇到了一个问题，想问你一下。
+> 我选的是各类设备中断处理的这个题目，关于磁盘I/O中断的部分我找到了中断信息的定义：
+> IRQ_IDE，然后在trap.c中的dispatch函数里的一个switch语句中找到了它的处理过程，但是这个函数中是这样写的： 
+> case IRQ_OFFSET + IRQ_IDE1:
+> case IRQ_OFFSET + IRQ_IDE2:
+> /* do nothing */
+> break;
+> 也就是对IDE中断什么也不做，请问这是为什么（或者是我没有找到正确的中断处理函数）？
+答：
+这是因为目前在“https://github.com/xinhaoyuan/ucore-mp64”中的IDE操作并没有使用中断方式，而是在磁盘读写操作时直接使用轮询方式完成的，参见“ide.c”中的函数。
+对这一部分的改进工作可参见“http://www.google.com/url?sa=D&q=http://code.google.com/p/u9proj/source/checkout%E2%80%9D&usg=AFQjCNFp5yEFrXvnEtVur8pJHJX7KlD0XQ。这是上学期操作系统课时完成的一个扩展，支持IDE的中断和DMA。 
+

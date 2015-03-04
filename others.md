@@ -787,3 +787,123 @@ xv6中目前没有获取系统时间的系统调用，你需要写一个相关�
 这是因为目前在“https://github.com/xinhaoyuan/ucore-mp64”中的IDE操作并没有使用中断方式，而是在磁盘读写操作时直接使用轮询方式完成的，参见“ide.c”中的函数。
 对这一部分的改进工作可参见“http://www.google.com/url?sa=D&q=http://code.google.com/p/u9proj/source/checkout%E2%80%9D&usg=AFQjCNFp5yEFrXvnEtVur8pJHJX7KlD0XQ。这是上学期操作系统课时完成的一个扩展，支持IDE的中断和DMA。 
 
+陈老师、王师兄，你们好： 
+我试了试Proj1，能单步跟踪什么的，也看了下代码，有几个问题需要请教： 
+1.	bootmain.c中，串口和并口如果不空闲，delay一段时间后，就直接输出字符了，如果此时仍旧忙呢？ 
+2.	我试了试oslab-chapt2-13.pdf中2.1.7中的调试： 
+.pdf中说的断点设置68行"mov1 $start,%esp"处，源代码中该行在69行 
+.我这边一往下执行直接到for循环那了，没有停在bootmain(void)处 
+.最后移0x7c00数据的地址在0x7c45而不是0x7c40 
+.请参见附件的69.jpg和70.jpg拷屏 
+
+3.	开发时，像printf和abs等c的库函数是否在bootloader和后续的os中的代码都不能用？都得自己实现
+  ？ 
+非常感谢～ 
+答：
+和Darmen讨论了下，关于第3个问题，是否应该取决于gcc，看能对什么样的语法进行编译，转化为机器码？ 
+哪些基础函数不需要在操作系统中进行实现就可以直接使用？ 
+这里面串口和并口都是连接输出的，没有考虑如果依旧忙的情况。但是给了足够长的时间让他把字符输出到console，而且这些输出都是调试相关的，不影响内核实现。不用考虑100%的正确情况吧。99.99%就行了 :") 
+pdf 的行号以及函数不能保证完全一致，因为我正在往里面加注释。也可能随时修改里面的函数调用过程，比如修改bug。文档的内容用做参考。能找到就行。 
+关于断点的设置。编译的时候，会在 obj 目录下生成 .asm 反汇编的内容以及 .sym 符号表。一切以生成的为准。以后文档会依照代码进行适当的修改。:'( 所以，看的时候，应该打开这些文件找到相应的符号位置。
+程序中所有的函数都需要重新实现。没有现成的。以往写普通程序，因为libc已经实现好了。但是ucore目前没有libc，所有的函数都是自己实现的。如果需¬要，但是没有，那么你们就得自己写。
+【lab1问题】
+陈老师您好！ 
+homework1中我有下面几个问题不太明白。 
+1、ucore操作系统是单体内核还是微内核组织架构？为什么？ 
+2、在lab1/proj3中，在bootloader中，当执行到bootmain函数时，栈(stack)的起始地址（base）是多少？bootload¬er启动的OS执行到init.c中kern_init函数时，栈的起始地址（base）是多少？是否会出现栈溢出的现象？简要说明答案的缘由。 
+这个问题是要通过静态分析代码得到答案吗？如何分析？ 
+3、请告知lab1/proj3中的init.c中的kern_init函数的逻辑地址、线性地址和物理地址分别是多少？ 
+这个问题也是要通过静态分析代码得到答案吗？如何分析？如果用gdb查看，可以看到cs和eip，但不知怎样看到物理地址？另外，lab1没有分页，线性地址和¬物理地址应该是一样的吧？ 
+希望老师解答，谢谢！ 
+答：
+单体内核。因为它把内存管理、文件系统、进程管理等传统操作系统的重要组成部分都放在内核中实现，可通过function call来相互访问，而不像微内核组织架构那样，有用户态的server实现, server之间通过IPC机制来相互访问。
+
+静态分析就可以了。 看看SP的赋值是多少，如果做push操作过多，压栈所用的内存空间以前是否有用，覆盖后对后续 bootloader和OS有影响？
+
+可以静态分析也可以动态分析，重点了解段表中的段表项中的地址映射关系。 
+用gdb查看，可以看到cs和eip是逻辑地址，物理地址可根据段地址映射关系静态算出来的。 
+lab1没有分页，线性地址和物理地址是一样的。
+【lab1和其扩展实验的问题】
+基本把Lab1+challenge实现了一下，发现了一个问题： 
+用qemu纯软件模拟时没有问题。 
+但用一台带虚拟化技术的CPU+kvm模块（qemu会自动检测使用kvm） 行时貌似有bug？开启kvm 
+proj3.1什么都不改时，make grade命令根本不会返回（是Makefile脚本的问题？）rmmod kvm-intel ;rmmod kvm;后一切正常。
+proj4加上基本的中断初始化（0-255 -> trap） 
+在print system footprint后会触发 
+1 ++ setup timer interrupts 
+2 trapframe at 0x7b80 
+3 edi 0x00000000 
+4 esi 0x00010094 
+5 ebp 0x00007be8 
+6 oesp 0x00007ba0 
+7 ebx 0x00010094 
+8 edx 0x000000a1 
+9 ecx 0x00000000 
+10 eax 0x000000ff 
+11 es 0x----0010 
+12 ds 0x----0010 
+13 trap 0x0000002f Hardware Interrupt 
+14 err 0x00000000 
+15 eip 0x001016a9 
+16 cs 0x----0008 
+17 flag 0x00000206 PF,IF,IOPL=0 
+18 kernel panic at kern/trap/trap.c:240: 
+19 unexpected trap in kernel. 
+trap 0x0000002f Hardware Interrupt 这个中断在无kvm时不会发生。。
+另外，中断时eip 0x001016a9，在initr_enable里，sti后两条指令。 
+这个是因为kvm把host的硬件中断调度到虚拟机里面了？ 
+还是什么原因呢？ 
+总而言之，硬件虚拟话貌似会改变系统运行情况。。??? 
+答：
+kvm 修改了qemu作为它的device (当然也是模拟的)，与qemu也许有些不同。 
+ox2f中断可能是其模拟的某个设备产生的。ucore收到这个中断认为是错误，其实可以简单的修改ucore，即不把0x2f中断的产生当成错误，而是丢掉不¬管。 
+总而言之，如果这个中断是kvm模拟的硬件环境中的某个外设产生的，ucore不处理其实没啥。 
+【lab2调试问题】
+在lab2--proj6--lapic.c 中58-62行完成了SMP方式下的时钟中断初始化工作。所以如果大家在用qemu调试时，注意要加上smp 参数，比如： 
+qemu -smp 2 -hda xv6.img
+如果把default_pmm.c中的defult_check函数改为 
+----------------------------------- 
+static void 
+default_check(void) { 
+basic_check(); 
+} 
+---------------------------------- 
+那么你会发现pmm.c中的check_alloc_page函数会通过，并输出检查成功信息： 
+"check_alloc_page() succeeded!\n" 
+这说明目前default_pmm中给出的空闲块分配算法可用，但很简单，不是first fit算法，所以在没有比较正确的first fit算法实现的情况下，defult_check函数中的某处会出错。 
+之前chyh1...@gmail.com给出的email中有很好的first fit执行过程的分析思路，请大家参考。 
+【lab2的问题】
+In part 1 of lab2, I meet with a problem, which occurs in this position:
+pmap.c / check_page_alloc():
+LIST_FOREACH(pp0, &page_free_list, pp_link)
+memset(page2kva(pp0), 0x97, 128);
+The error info is:
+Physical memory: 32768K available, base = 640K, extended = 31744K 
+kernel panic at bx_dbg_read_linear: physical memory read error 
+(phy=0xa7979797, lin=0xa7979797
+Next at t=9812888
+(0) [0xfffffff0] f000:fff0 (unk. ctxt): jmp far f000:e05b ;
+ea5be000f0
+before the position, there is a hint that is as follows:
+// if there's a page that shouldn't be on
+// the free list, try to make sure it
+// eventually causes trouble.
+So I think maybe that's the problem. However, I can't fix it in the end. Does anybody know how to solve this problem? 
+答：
+It seems that your code does something malicious, causing Bochs panicking. Find out what physical address access causing this panic.
+
+You must have made some mistake in page_init() when building page_free_list. 
+Make sure you add only VALID & FREE physical memory pages to the list.
+
+Yes, this is the problem because when I make the page above the EXTPHYSMEM used, check_page_alloc() can work. However it is not correct as it is said in page_init():
+// 4) Then extended memory [EXTPHYSMEM, ...).
+// Some of it is in use, some is free. Where is the kernel?
+// Which pages are used for page tables and other data
+structures?
+I read many resources about this , but I can't get it. What structure does the physical address is? How can I get the address of " pages used for page tables and other data
+structures" ? Thx!
+
+PADDR(va) translates virtual address va to phys. address. 
+IOPHYSMEM, EXTPHYSMEM, etc are already physical addresses. 
+PPN(pa) gives you the index of pages[] for phys. address pa. 
+BTW, I suggest you spend several minutes to read carefully inc/memlayout.h inc/mmu.h kern/pmap.h and understand what's going on there. That will help you much. 

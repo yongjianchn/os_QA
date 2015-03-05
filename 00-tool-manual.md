@@ -43,8 +43,8 @@
  
  
 ### piazza讨论区以及互评题的添加(相关文档已上传至wiki附件)
-  [wiki上传附件地址](http://os.cs.tsinghua.edu.cn/oscourse/OsMooc2014?action=AttachFile)
- 1. piazza讨论区的添加:参考附件20150131-AddingPiazzatoedX.pdf
- 2. 互评区相关内容:参考附件Peer%20Grading%20Guide.pdf 以及主观题互评操作相关流程20150107.docx
+ 1.[wiki上传附件地址](http://os.cs.tsinghua.edu.cn/oscourse/OsMooc2014?action=AttachFile)
+ 2. piazza讨论区的添加:参考附件20150131-AddingPiazzatoedX.pdf
+ 3. 互评区相关内容:参考附件Peer%20Grading%20Guide.pdf 以及主观题互评操作相关流程20150107.docx
  
 ## 学堂在线平台的使用

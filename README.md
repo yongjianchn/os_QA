@@ -1,5 +1,6 @@
 # 操作系统课程问答
 
+* [工具使用帮助](00-tool-manual.md)
 * [操作系统介绍](01-intro.md)
 * [中断、异常和系统调用](02-interrupt-exception-syscall.md)
 * [物理内存管理](03-pmm.md)

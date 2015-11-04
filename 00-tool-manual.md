@@ -83,7 +83,7 @@ http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X_2015_T2+2015_T2/co
 
 “实验账号初始化”操作会随网络系统负载情况，等待几十秒到几分钟不等。操作完成后会看到类似如下显示的信息。
 “supernova account”是在IBM超能云上的注册邮箱，在获取VPN账号时会用到，这个邮箱必须是你在学堂在线上的注册邮箱；“shibboleth account”是访问IBM超能云上的openedx、gitlab和docker的用户名；“password”是访问IBM超能云上所有服务所需要的密码。请妥善保存这三个信息。
-{{{
+
 IBM supernova account:
 
 xxxxxx@qq.com
@@ -95,7 +95,7 @@ ea23cbdac0xxxxxxxxxx
 password:
 
 18IFxxxx
-}}}
+
 
 ### 登录并访问IBM超能云上的openedx系统
 

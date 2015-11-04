@@ -76,7 +76,7 @@
 
 背景：由于此前用于访问IBM超能云的VPN很不稳定，在IBM中国研究院的大力支持下，我们完成了这个不需要VPN访问IBM超能云上操作系统课实验docker的方法，以方便学习操作系统课的同学们在IBM超能云上操作系统课实验docker中进行ucore实验。
 
-### 访问学堂在线网站，完成IBM超能云上的用户注册。
+### 1.访问学堂在线网站，完成IBM超能云上的用户注册。
 
 在学堂在线注册学习操作系统课后，就可以访问下面链接进行IBM超能云上的用户注册工作。
 http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X_2015_T2+2015_T2/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/2
@@ -97,7 +97,7 @@ password:
 18IFxxxx
 
 
-### 登录并访问IBM超能云上的openedx系统
+### 2.登录并访问IBM超能云上的openedx系统
 
 第一次访问时需要先访问下面链接输入自己在前面获取的账号和密码，以便登录openedx虚拟机。
 
@@ -111,7 +111,7 @@ https://crl.ptopenlab.com:8800/idp/Authn/UserPassword
 
 http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/
 
-### 在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
+### 3.在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
 
 访问下面链接，并阅读关于docker和gitlab的使用帮助。
 
@@ -127,7 +127,7 @@ http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de
 
 刷新docker状态，不会导致重复创建。重复点击创建只会刷新页面，而且只是读状态，响应应该比刷新页面快。
 
-### 访问自己的操作系统课实验docker
+### 4.访问自己的操作系统课实验docker
 
 点击docker创建页面上的“Webshell”，跳转到类似如下链接的docker的web shell页面。
 

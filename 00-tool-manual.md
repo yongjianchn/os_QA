@@ -71,3 +71,69 @@
  3. 对于每一个视频，点击所属第几讲下面的红色“新增文件”，资源类型“教学录像”，标题对应填写，最下面选择上传文件。
  4. **等待上传文件完成后，**点击确定关闭窗口。
  5. （“课程管理”->“学生界面浏览”可以确认效果。上传完成后学生不会立即看到视频，网络学堂需要几分钟进行转码。）
+
+## 不需要VPN访问IBM超能云上操作系统课实验docker的方法
+
+背景：由于此前用于访问IBM超能云的VPN很不稳定，在IBM中国研究院的大力支持下，我们完成了这个不需要VPN访问IBM超能云上操作系统课实验docker的方法，以方便学习操作系统课的同学们在IBM超能云上操作系统课实验docker中进行ucore实验。
+
+### 访问学堂在线网站，完成IBM超能云上的用户注册。
+
+在学堂在线注册学习操作系统课后，就可以访问下面链接进行IBM超能云上的用户注册工作。
+http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X_2015_T2+2015_T2/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/2
+
+“实验账号初始化”操作会随网络系统负载情况，等待几十秒到几分钟不等。操作完成后会看到类似如下显示的信息。
+“supernova account”是在IBM超能云上的注册邮箱，在获取VPN账号时会用到，这个邮箱必须是你在学堂在线上的注册邮箱；“shibboleth account”是访问IBM超能云上的openedx、gitlab和docker的用户名；“password”是访问IBM超能云上所有服务所需要的密码。请妥善保存这三个信息。
+{{{
+IBM supernova account:
+
+xxxxxx@qq.com
+
+shibboleth account(for edx and gitlab):
+
+ea23cbdac0xxxxxxxxxx
+
+password:
+
+18IFxxxx
+}}}
+
+### 登录并访问IBM超能云上的openedx系统
+
+第一次访问时需要先访问下面链接输入自己在前面获取的账号和密码，以便登录openedx虚拟机。
+
+http://crl.ptopenlab.com:8811
+
+先输入“supernova account”和“password”后，系统会自动转到下面的shibboleth认证服务链接，再输入“shibboleth account”和“password”。
+
+https://crl.ptopenlab.com:8800/idp/Authn/UserPassword
+
+成功登录openedx系统后，你能看到下面链接所示的“Tsinghua: CS101 操作系统内核实验”中的操作系统课实验和练习页面。
+
+http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/
+
+### 在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
+
+访问下面链接，并阅读关于docker和gitlab的使用帮助。
+
+http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/7be9a21ca62e4f5d8325d27b66a0c9bf/1
+
+然后访问下面链接，点击“Create Docker”创建自己的操作系统课实验docker。
+
+http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/7be9a21ca62e4f5d8325d27b66a0c9bf/2
+
+创建成功后，你就会在“DockersList”列表中看到自己的docker信息。
+
+由于docker创建和初始化的过程有些慢或多个用户同时进行docker创建，可能出现“看不到创建的docker”或“较长时间没有反应”的情况。这个过程通常会在3-4分钟的时间。4分钟以上可能会失去响应，这时可手动刷新浏览器页面或再次点击“Create Docker”。
+
+刷新docker状态，不会导致重复创建。重复点击创建只会刷新页面，而且只是读状态，响应应该比刷新页面快。
+
+### 访问自己的操作系统课实验docker
+
+点击docker创建页面上的“Webshell”，跳转到类似如下链接的docker的web shell页面。
+
+https://crl.ptopenlab.com:8800/webshell/vzuFSEpyxxxxxxxx/
+
+输入自己的“shibboleth account”和“password”，即可进入字符界面的实验环境。
+
+注意：每个docker只有创建者和管理员可以访问。
+

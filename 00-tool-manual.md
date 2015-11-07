@@ -74,7 +74,7 @@
 
 ## 不需要VPN访问IBM超能云上操作系统课实验docker的方法
 
-背景：由于此前用于访问IBM超能云的VPN很不稳定，在IBM中国研究院的大力支持下，我们完成了这个不需要VPN访问IBM超能云上操作系统课实验docker的方法，以方便学习操作系统课的同学们在IBM超能云上操作系统课实验docker中进行ucore实验。
+背景：由于此前用于访问IBM超能云（supervessel）的VPN很不稳定，在IBM中国研究院的大力支持下，我们完成了这个不需要VPN访问IBM超能云上操作系统课实验docker的方法，以方便学习操作系统课的同学们在IBM超能云上操作系统课实验docker中进行ucore实验。
 
 ### 1.访问学堂在线网站，完成IBM超能云上的用户注册。
 
@@ -82,7 +82,7 @@
 http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X_2015_T2+2015_T2/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/2
 
 “实验账号初始化”操作会随网络系统负载情况，等待几十秒到几分钟不等。操作完成后会看到类似如下显示的信息。
-“supernova account”是在IBM超能云上的注册邮箱，在获取VPN账号时会用到，这个邮箱必须是你在学堂在线上的注册邮箱；“shibboleth account”是访问IBM超能云上的openedx、gitlab和docker的用户名；“password”是访问IBM超能云上所有服务所需要的密码。请妥善保存这三个信息。
+“supernova account”是在IBM超能云上的注册邮箱，在获取VPN账号时会用到，这个邮箱必须是你在学堂在线上的注册邮箱；在IBM超能云上的注册过程中包括一个邮件激活的操作，可能出现没有收到激活邮件等问题，可以不理它，这不会影响openedx和docker的访问。在“shibboleth account”是访问IBM超能云上的openedx、gitlab和docker的用户名；“password”是访问IBM超能云上所有服务所需要的密码。请妥善保存这三个信息。
 
 IBM supernova account:
 

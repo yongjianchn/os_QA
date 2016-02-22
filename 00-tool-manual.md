@@ -72,7 +72,7 @@
  4. **等待上传文件完成后，**点击确定关闭窗口。
  5. （“课程管理”->“学生界面浏览”可以确认效果。上传完成后学生不会立即看到视频，网络学堂需要几分钟进行转码。）
 
-## 不需要VPN访问IBM超能云上“操作系统在线练习和实验环境”的方法
+## 较少依赖VPN访问IBM超能云上“操作系统在线练习和实验环境”的方法
 
 背景：由于此前用于访问IBM超能云（supervessel）的VPN很不稳定，在IBM中国研究院的大力支持下，我们完成了这个可较依赖VPN访问IBM超能云上操作系统课实验docker的方法，以方便学习操作系统课的同学们在IBM超能云上“操作系统在线练习和实验环境”。在这个环境中，可在线完成操作系统课的练习、用docker做ucore实验、浏览和编辑ucore代码，以及搜索piazza讨论区的历史记录。
 
@@ -112,7 +112,7 @@ password:
  2. 登录openedx系统并初始化成功的标志是，登录后的页面右上角有你的“shibboleth account”信息。这时你能链接 http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/ ，并看到“Tsinghua: CS101 操作系统内核实验”中的操作系统课实验和练习页面。
  3. 登录之后需要补充用户名(请与给出的shibboleth账号保持一致)。
 
-### 5. 配置访问IBM超能云内部网络的VPN，并初始化gitlab上的ucore基准代码
+### 5. 配置访问IBM超能云内部网络的VPN，并初始化gitlab上的ucore基准代码（只有这一步依赖VPN）
  1. 访问链接 http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X+2016_T1/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/1 ，获取配置VPN所需要需要的账号和密码信息。
  1. 参见帮助 https://services.ptopenlab.com/mediawiki/index.php/VPN%E7%9A%84%E4%BD%BF%E7%94%A8 设置访问IBM超能云内部网络的VPN。
  1. VPN连接成功的标志是，命令“ping 172.16.13.236”确认能连gitlab服务器。

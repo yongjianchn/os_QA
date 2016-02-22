@@ -119,7 +119,7 @@ password:
  1. 访问gitlab服务器的登录页面 http://172.16.13.236/users/sign_in ，点击“Shibboleth”按钮，页面会跳转到shibboleth的登录页面，输入你在前面步骤中得到的“shibboleth account”和“password”。
  1. gitlab初始化成功的标志是，浏览器页面自动到你的gitlab主页，页面左下角有你的用户名。
 
-### 6.在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
+### 6. 在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
 
 访问下面链接，并阅读关于docker和gitlab的使用帮助。
 
@@ -135,7 +135,7 @@ http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de
 
 刷新docker状态，不会导致重复创建。重复点击创建只会刷新页面，而且只是读状态，响应应该比刷新页面快。
 
-### 7.访问自己的操作系统课实验docker
+### 7. 访问自己的操作系统课实验docker
 
 点击docker创建页面上的“Webshell”，跳转到类似如下链接的docker的web shell页面。
 

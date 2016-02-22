@@ -88,13 +88,10 @@
  2. 第一次使用的用户需要填写邮箱（要求使用学堂在线注册的邮箱，不要求一定是清华大学的邮箱）及密码（已注册过Piazza的用户不用输入密码）进行注册。建议设置用户名为实名加学号，例如“张三2010011234”。在此过程中需要输入操作系统课号“30240243x”和年份编号“2015”。
  3. 注册或关联成功的标志是，访问链接 https://piazza.com/tsinghua.edu.cn/spring2015/30240243x/home 可以看到第二行的“Tsinghua University - Spring 2015”和第三行的“30240243X: Principles of Operating Systems”，并且右上角是你自己的用户名。
 
-### 1.访问学堂在线网站，完成IBM超能云上访问“操作系统在线练习和实验环境”需要的用户注册。
+### 3. 访问学堂在线网站，完成IBM超能云上访问“操作系统在线练习和实验环境”需要的用户注册。
 
-在学堂在线注册学习操作系统课后，就可以访问下面链接进行IBM超能云上的用户注册工作。
-http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X_2015_T2+2015_T2/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/2
-
-“实验账号初始化”操作会随网络系统负载情况，等待几十秒到几分钟不等。操作完成后会看到类似如下显示的信息。
-“supernova account”是在IBM超能云上的注册邮箱，在获取VPN账号时会用到，这个邮箱必须是你在学堂在线上的注册邮箱；在IBM超能云上的注册过程中包括一个邮件激活的操作，可能出现没有收到激活邮件等问题，可以不理它，这不会影响openedx和docker的访问。在“shibboleth account”是访问IBM超能云上的openedx、gitlab和docker的用户名；“password”是访问IBM超能云上所有服务所需要的密码。请妥善保存这三个信息。
+ 1. 在学堂在线注册学习操作系统课后，就可以访问链接 http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X+2016_T1/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/2 获取进行IBM超能云上的用户注册工作。
+ 2. “实验账号初始化”操作会随网络系统负载情况，等待几十秒到几分钟不等。操作完成后会看到类似如下显示的信息。“supernova account”是在IBM超能云上的注册邮箱，在获取VPN账号时会用到，这个邮箱必须是你在学堂在线上的注册邮箱；在IBM超能云上的注册过程中包括一个邮件激活的操作，可能出现没有收到激活邮件等问题，可以不理它，这不会影响openedx和docker的访问。在“shibboleth account”是访问IBM超能云上的openedx、gitlab和docker的用户名；“password”是访问IBM超能云上所有服务所需要的密码。请妥善保存这三个信息。
 
 IBM supernova account:
 
@@ -109,20 +106,20 @@ password:
 18IFxxxx
 
 
-### 2.初始化IBM超能云上“操作系统在线练习和实验环境”设置，并登录并访问IBM超能云上的openedx系统
+### 4. 初始化IBM超能云上“操作系统在线练习和实验环境”设置，并登录并访问IBM超能云上的openedx系统
 
  1. 访问IBM超能云上的“内部实验平台测试课程”链接 http://crl.ptopenlab.com:8811/courses/edX/DemoX/Demo_Course/about ，并点击“登录”后会跳转到如下shibboleth登录界面 https://crl.ptopenlab.com:8800/idp/Authn/UserPassword 。这一步有些鬼异，目的是绕到shibboleth的登录界面，对“操作系统在线练习和实验环境”中的openedx进行初始化。输入你在前面步骤中得到的“shibboleth account”和“password”。
  2. 登录openedx系统并初始化成功的标志是，登录后的页面右上角有你的“shibboleth account”信息。这时你能链接 http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/ ，并看到“Tsinghua: CS101 操作系统内核实验”中的操作系统课实验和练习页面。
  3. 登录之后需要补充用户名(请与给出的shibboleth账号保持一致)。
 
-### 4. 配置访问IBM超能云内部网络的VPN，并初始化gitlab上的ucore基准代码
+### 5. 配置访问IBM超能云内部网络的VPN，并初始化gitlab上的ucore基准代码
  1. 访问链接 http://www.xuetangx.com/courses/course-v1:TsinghuaX+30240243X+2016_T1/courseware/14def9edc58e4936abd418333f899836/37afa0e088164343aab65b4d077fb372/1 ，获取配置VPN所需要需要的账号和密码信息。
  1. 参见帮助 https://services.ptopenlab.com/mediawiki/index.php/VPN%E7%9A%84%E4%BD%BF%E7%94%A8 设置访问IBM超能云内部网络的VPN。
  1. VPN连接成功的标志是，命令“ping 172.16.13.236”确认能连gitlab服务器。
  1. 访问gitlab服务器的登录页面 http://172.16.13.236/users/sign_in ，点击“Shibboleth”按钮，页面会跳转到shibboleth的登录页面，输入你在前面步骤中得到的“shibboleth account”和“password”。
  1. gitlab初始化成功的标志是，浏览器页面自动到你的gitlab主页，页面左下角有你的用户名。
 
-### 3.在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
+### 6.在IBM超能云上的openedx系统中创建自己的操作系统课实验docker
 
 访问下面链接，并阅读关于docker和gitlab的使用帮助。
 
@@ -138,7 +135,7 @@ http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de
 
 刷新docker状态，不会导致重复创建。重复点击创建只会刷新页面，而且只是读状态，响应应该比刷新页面快。
 
-### 4.访问自己的操作系统课实验docker
+### 7.访问自己的操作系统课实验docker
 
 点击docker创建页面上的“Webshell”，跳转到类似如下链接的docker的web shell页面。
 
@@ -150,12 +147,10 @@ https://crl.ptopenlab.com:8800/webshell/vzuFSEpyxxxxxxxx/
 
 至此，所有注册和初始化工作全部完成。
 
+### 8. 确认所有注册和初始化工作完成
+
 成功标志是，可以直接在浏览器中访问下面链接来访问IBM超能云上“操作系统在线练习和实验环境”中的各种功能。
-
-创建和访问docker： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/7be9a21ca62e4f5d8325d27b66a0c9bf/2
-
-ucore实验代码浏览和编辑： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/400f7c812c254b799e66194d24b297ae/
-
-搜索piazza上的历史记录： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/896b56b6156047869eecd8b519852558/
-
-完成在线练习题： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/73a7712ec5084f7598c97c129ba9ff52/1
+ 1. 创建和访问docker： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/7be9a21ca62e4f5d8325d27b66a0c9bf/2
+ 2. ucore实验代码浏览和编辑： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/400f7c812c254b799e66194d24b297ae/
+ 3. 搜索piazza上的历史记录： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/896b56b6156047869eecd8b519852558/
+ 4. 完成在线练习题： http://crl.ptopenlab.com:8811/courses/Tsinghua/CS101/2015_T1/courseware/65a2e6de0e7f4ec8a261df82683a2fc3/73a7712ec5084f7598c97c129ba9ff52/1
